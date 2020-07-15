@@ -1,0 +1,15 @@
+{
+  "name": "edsonmoretti/mikrotik-api-client",
+  "required": {
+    "php": ">=7.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mikrotik\\": "src/",
+      "Mikrotik\\Models\\": "src/Models/",
+      "Mikrotik\\Hotspot\\": "src/Hotspot/",
+      "Mikrotik\\Hotspot\\Models\\": "src/Hotspot/Models/",
+      "Mikrotik\\Exceptions\\": "src/Exceptions/"
+    }
+  }
+}
