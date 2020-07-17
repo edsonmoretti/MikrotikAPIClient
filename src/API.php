@@ -26,7 +26,7 @@ class API extends RouterosAPI
 
     public function connect(): bool
     {
-        return parent::con($this->ip, null, $this->login, $this->password);
+        return parent::con($this->ip, $this->port, $this->login, $this->password);
     }
 
     public function disconnect()
