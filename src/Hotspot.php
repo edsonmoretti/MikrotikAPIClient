@@ -74,7 +74,7 @@ class Hotspot
                 $user->setLoginBy($userArray['login-by']);
                 $user->setUptime($userArray['uptime']);
                 $user->setIdleTime($userArray['idle-time']);
-                if(isset($userArray['keepalive-timeout'])) $user->setKeepaliveTimeout($userArray['keepalive-timeout']);
+                if (isset($userArray['keepalive-timeout'])) $user->setKeepaliveTimeout($userArray['keepalive-timeout']);
                 $user->setBytesIn($userArray['bytes-in']);
                 $user->setBytesOut($userArray['bytes-out']);
                 $user->setPacketsIn($userArray['packets-in']);
@@ -123,6 +123,35 @@ class Hotspot
             $id = $array;
             API::getInstance()->disconnect();
             return ['id' => $id];
+        } else {
+            throw new ConnectionException(Hotspot::CONNNECTION_ERROR_MESSAGE);
+        }
+    }
+
+    public function activeLogin($username, $password, $mac, $ip)
+    {
+        if (API::getInstance()->connect()) {
+            API::getInstance()->write('/ip/hotspot/active/login
+   =user=' . $username . '
+   =password=' . $password . '
+   =mac-address=' . $mac . '
+   =ip=' . $ip . '
+   ');
+            $read = API::getInstance()->read(false);
+            $array = API::getInstance()->parseResponse($read);
+            if (isset($array['!trap'])) {
+                if (isset($array['!trap'][0])) {
+                    if (isset($array['!trap'][0]['message'])) {
+                        if ($this->contains($array['!trap'][0]['message'], 'is already logged in')) {
+                            throw new Exception($array['!trap'][0]['message']);
+                        } else {
+                            throw new Exception($array['!trap'][0]['message']);
+                        }
+                    }
+                }
+            }
+            API::getInstance()->disconnect();
+            return true;
         } else {
             throw new ConnectionException(Hotspot::CONNNECTION_ERROR_MESSAGE);
         }
